@@ -1,7 +1,5 @@
 
 
-
-
 export default function Contact() {
   return (
     <div className="p-6 max-w-2xl mx-auto min-h-[calc(100vh-160px)] flex flex-col justify-center">

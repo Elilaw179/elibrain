@@ -1,17 +1,25 @@
 
+
+
+
+
 import React, { useState } from 'react';
+
 export default function Chat() {
   const [messages, setMessages] = useState([
-    { type: 'ai', text: 'Hi! Ask me anything about your school subjects  SirLaw is willing to help.' },
+    { type: 'ai', text: 'Hi! Ask me anything about your school subjects. SirLaw is willing to help.' },
   ]);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false); // ✅ NEW: loading state
 
   const handleSend = async () => {
     if (!input.trim()) return;
+
     const userMessage = { type: 'user', text: input };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput('');
+    setLoading(true); // ✅ show typing...
 
     try {
       const response = await fetch('https://elishaaai-backend.onrender.com/api/chat', {
@@ -28,6 +36,8 @@ export default function Chat() {
       setMessages(prev => [...prev, { type: 'ai', text: data.reply }]);
     } catch {
       setMessages(prev => [...prev, { type: 'ai', text: 'Something went wrong. Try again.' }]);
+    } finally {
+      setLoading(false); // ✅ hide typing...
     }
   };
 
@@ -70,6 +80,13 @@ export default function Chat() {
             </div>
           </div>
         ))}
+
+        {/* Loading indicator */}
+        {loading && (
+          <div className="flex max-w-3xl mx-auto justify-start text-indigo-500 px-4 animate-pulse">
+            <span className="text-sm">Thinking and typing......</span>
+          </div>
+        )}
       </div>
 
       {/* Input */}
@@ -94,13 +111,3 @@ export default function Chat() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
